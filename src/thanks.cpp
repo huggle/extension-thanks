@@ -69,6 +69,7 @@ void huggle_thanks::Send(WikiEdit *edit)
     ApiQuery *query = new ApiQuery(ActionCustom);
     query->SetCustomActionPart("thank");
     query->Parameters = "rev=" + QString::number(edit->RevID) + "&source=huggle&token=" + QUrl::toPercentEncoding(edit->GetSite()->GetProjectConfig()->Token_Csrf);
+    query->UsingPOST = true;
     query->Target = "Thanking user " + edit->User->Username;
     QueryPool::HugglePool->AppendQuery(query);
     query->Process();
@@ -94,6 +95,11 @@ void huggle_thanks::ThankForCurrentEdit()
         Syslog::HuggleLogs->ErrorLog("This feature can't be used for selected wiki edit");
         return;
     }
+    if (this->Window->GetCurrentWikiEdit()->User->IsIP())
+    {
+        Syslog::HuggleLogs->ErrorLog("This feature works on registered users only!!");
+        return;
+    }
     this->Send(this->Window->GetCurrentWikiEdit());
 }
 
@@ -102,6 +108,8 @@ void huggle_thanks::Hook_GoodEdit(void *edit)
     if (!this->toggle->isChecked())
         return;
     WikiEdit *Edit = (WikiEdit*)edit;
+    if (Edit->User->IsIP())
+        return;
     if (!huggle_thanks::WikiCk(Edit->GetSite()))
     {
         Syslog::HuggleLogs->ErrorLog("This feature can't be used for selected wiki edit");
