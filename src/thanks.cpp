@@ -22,7 +22,6 @@
 #include <wikisite.hpp>
 #include <wikipage.hpp>
 #include <wikiuser.hpp>
-#include <speedyform.hpp>
 #include <syslog.hpp>
 #include <configuration.hpp>
 
@@ -30,14 +29,15 @@ using namespace Huggle;
 
 bool huggle_thanks::WikiCk(WikiSite *site)
 {
-    if (site->Name == "huggle_thanks")
+    if (hcfg->GlobalConfigurationWikiAddress == "meta.wikimedia.org/w/")
         return true;
-    Generic::MessageBox("Error", "You can use this feature only on english wikipedia");
+    Generic::MessageBox("Error", "You can use this feature only on WMF wikis");
     return false;
 }
 
 huggle_thanks::huggle_thanks()
 {
+    this->menu = nullptr;
 }
 
 huggle_thanks::~huggle_thanks()
@@ -62,24 +62,62 @@ bool huggle_thanks::IsWorking()
     return true;
 }
 
+void huggle_thanks::Send(WikiEdit *edit)
+{
+    // https://www.mediawiki.org/wiki/Extension:Thanks#API_Documentation
+
+    ApiQuery *query = new ApiQuery(ActionCustom);
+    query->SetCustomActionPart("thank");
+    query->Parameters = "rev=" + QString::number(edit->RevID) + "&source=huggle&token=" + QUrl::toPercentEncoding(edit->GetSite()->GetProjectConfig()->Token_Csrf);
+    query->Target = "Thanking user " + edit->User->Username;
+    QueryPool::HugglePool->AppendQuery(query);
+    query->Process();
+}
+
 void huggle_thanks::Hook_MainWindowOnLoad(void *window)
 {
     this->Window = (Huggle::MainWindow*)window;
-    this->menuThanks = new QAction("Thank this user", this->Window->ui->menuUser);
+    this->menuThanks = new QAction("Thank user for this edit", this->Window->ui->menuUser);
+    this->toggle = new QAction("Automatically thank users for every good edit", this->Window->ui->menuUser);
+    this->toggle->setCheckable(true);
+    this->toggle->setChecked(Generic::SafeBool(hcfg->GetExtensionConfig(this->GetExtensionName(), "toggle", "false")));
+    this->Window->ui->menuPage->addAction(this->toggle);
     this->Window->ui->menuPage->addAction(this->menuThanks);
+    connect(this->toggle, SIGNAL(triggered()), this, SLOT(Click0()));
     connect(this->menuThanks, SIGNAL(triggered()), this, SLOT(Click1()));
+}
+
+void huggle_thanks::ThankForCurrentEdit()
+{
+    if (!this->Window->CheckEditableBrowserPage() || !huggle_thanks::WikiCk(this->Window->GetCurrentWikiSite()))
+    {
+        Syslog::HuggleLogs->ErrorLog("This feature can't be used for selected wiki edit");
+        return;
+    }
+    this->Send(this->Window->GetCurrentWikiEdit());
+}
+
+void huggle_thanks::Hook_GoodEdit(void *edit)
+{
+    if (!this->toggle->isChecked())
+        return;
+    WikiEdit *Edit = (WikiEdit*)edit;
+    if (!huggle_thanks::WikiCk(Edit->GetSite()))
+    {
+        Syslog::HuggleLogs->ErrorLog("This feature can't be used for selected wiki edit");
+        return;
+    }
+    this->Send(Edit);
+}
+
+void huggle_thanks::Click0()
+{
+    hcfg->SetExtensionConfig(this->GetExtensionName(), "toggle", Generic::Bool2String(this->toggle->isChecked()));
 }
 
 void huggle_thanks::Click1()
 {
-    if (!this->Window->CheckEditableBrowserPage() || !huggle_thanks::WikiCk(this->Window->GetCurrentWikiSite()))
-        return;
-    QString pn = this->Window->CurrentEdit->Page->GetNS()->GetCanonicalName();
-    if (pn == "Template")
-    {
-        Generic::MessageBox("Error", "You can't use PROD for templates or categories");
-        return;
-    }
+    this->ThankForCurrentEdit();
 }
 
 #if QT_VERSION < 0x050000

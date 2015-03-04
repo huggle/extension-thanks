@@ -19,6 +19,8 @@
 namespace Huggle
 {
     class MainWindow;
+    class WikiPage;
+    class WikiEdit;
     class WikiSite;
 }
 
@@ -37,17 +39,22 @@ class huggle_thanks : public QDeclarativeItem, public Huggle::iExtension
         bool Register();
         bool IsWorking();
         void Hook_MainWindowOnLoad(void *window);
+        void Hook_GoodEdit(void *edit);
         QString GetExtensionName() { return "Thanks"; }
         QString GetExtensionAuthor() { return "Petr Bena"; }
         QString GetExtensionDescription() { return "WikiLove buttons"; }
         QString GetExtensionVersion() { return "1.0.0"; }
         QAction *menu;
+        QAction *toggle;
         bool RequestCore() { return true; }
         bool RequestNetwork() { return true; }
         bool RequestConfiguration() { return true; }
     private slots:
+        void Click0();
         void Click1();
     private:
+        void Send(Huggle::WikiEdit *edit);
+        void ThankForCurrentEdit();
         QAction *menuThanks = nullptr;
         Huggle::MainWindow *Window;
 };
