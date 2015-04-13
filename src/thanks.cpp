@@ -47,13 +47,7 @@ huggle_thanks::~huggle_thanks()
 
 bool huggle_thanks::Register()
 {
-    Huggle::Core::HuggleCore = (Huggle::Core*) this->HuggleCore;
-    Huggle::QueryPool::HugglePool = Huggle::Core::HuggleCore->HGQP;
-    Huggle::Localizations::HuggleLocalizations = (Huggle::Localizations*) this->Localization;
-    Huggle::Syslog::HuggleLogs = Huggle::Core::HuggleCore->HuggleSyslog;
-    Huggle::GC::gc = Huggle::Core::HuggleCore->gc;
-    Huggle::Query::NetworkManager = this->Networking;
-    Huggle::Configuration::HuggleConfiguration = (Huggle::Configuration*) this->Configuration;
+    this->Init();
     return true;
 }
 
