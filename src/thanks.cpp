@@ -13,6 +13,7 @@
 #include <collectable_smartptr.hpp>
 #include <localization.hpp>
 #include <QMessageBox>
+#include <QUrl>
 #include <query.hpp>
 #include <querypool.hpp>
 #include <mainwindow.hpp>
