@@ -8,7 +8,6 @@ SET(CMAKE_CXX_FLAGS "-std=c++11")
 SET(QT_USE_QTNETWORK TRUE)
 SET(QT_USE_QTXML TRUE)
 SET(QT_USE_QTDECLARATIVE TRUE)
-SET(QT_USE_QTWEBKIT TRUE)
 SET(CMAKE_BUILD_TYPE Release)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 SET(CMAKE_AUTOMOC ON)
@@ -17,7 +16,6 @@ include_directories(../../)
 if(QT5_BUILD)
     find_package(Qt5Core REQUIRED)
     find_package(Qt5Gui REQUIRED)
-    find_package(Qt5WebKit REQUIRED)
     find_package(Qt5Xml REQUIRED)
     find_package(Qt5Widgets REQUIRED)
     find_package(Qt5Network REQUIRED)
@@ -25,7 +23,6 @@ if(QT5_BUILD)
         ${Qt5Gui_INCLUDE_DIRS}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5Network_INCLUDE_DIRS}
-        ${Qt5WebKit_INCLUDE_DIRS}
         ${Qt5Xml_INCLUDE_DIRS}
         ${Qt5Svg_INCLUDE_DIRS}
     )
@@ -67,7 +64,7 @@ if (NOT "${CMAKE_SYSTEM}" MATCHES "Linux")
     TARGET_LINK_LIBRARIES(huggle_thanks core)
 endif ()
 if (QT5_BUILD)
-    qt5_use_modules(huggle_thanks Core Gui Widgets Declarative WebKitWidgets Xml)
+    qt5_use_modules(huggle_thanks Core Gui Widgets Declarative Xml)
 endif()
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 INSTALL(TARGETS huggle_thanks DESTINATION share/huggle/extensions)
