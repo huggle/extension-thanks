@@ -76,7 +76,7 @@ void huggle_thanks::Hook_MainWindowOnLoad(void *window)
     this->menuThanks = new QAction("Thank user for this edit", this->Window->ui->menuUser);
     this->toggle = new QAction("Automatically thank users for every good edit", this->Window->ui->menuUser);
     this->toggle->setCheckable(true);
-    this->toggle->setChecked(Generic::SafeBool(hcfg->GetExtensionConfig(this->GetExtensionName(), "toggle", "false")));
+    this->toggle->setChecked(Generic::SafeBool(hcfg->GetExtensionConfig(this->GetExtensionName(), "toggle", "true")));
     this->Window->ui->menuPage->addAction(this->toggle);
     this->Window->ui->menuPage->addAction(this->menuThanks);
     connect(this->toggle, SIGNAL(triggered()), this, SLOT(Click0()));
