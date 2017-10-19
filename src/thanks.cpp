@@ -61,7 +61,7 @@ void huggle_thanks::Send(WikiEdit *edit)
 {
     // https://www.mediawiki.org/wiki/Extension:Thanks#API_Documentation
 
-    ApiQuery *query = new ApiQuery(ActionCustom);
+    ApiQuery *query = new ApiQuery(ActionCustom, edit->GetSite());
     query->SetCustomActionPart("thank");
     query->Parameters = "rev=" + QString::number(edit->RevID) + "&source=huggle&token=" + QUrl::toPercentEncoding(edit->GetSite()->GetProjectConfig()->Token_Csrf);
     query->UsingPOST = true;
