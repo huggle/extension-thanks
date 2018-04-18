@@ -41,7 +41,7 @@ file (GLOB thanks_uixx
 )
 
 SET(thanks_SOURCES ${thanks_srcx})
-SET(thanks_FORMS ${thanks_uixx} "../../mainwindow.ui")
+SET(thanks_FORMS ${thanks_uixx})
 SET(thanks_RESOURCES ${thanks_resx})
 if(QT5_BUILD)
     QT5_WRAP_CPP(thanks_HEADERS_MOC ${thanks_HEADERS})

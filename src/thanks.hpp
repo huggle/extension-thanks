@@ -12,7 +12,7 @@
 #define THANKS_H
 
 #define HUGGLE_EXTENSION
-#include <iextension.hpp>
+#include <huggle_core/iextension.hpp>
 #include <QAction>
 
 namespace Huggle

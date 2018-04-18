@@ -9,22 +9,22 @@
 //GNU General Public License for more details.
 
 #include "thanks.hpp"
-#include <core.hpp>
-#include <collectable_smartptr.hpp>
-#include <localization.hpp>
+#include <huggle_core/core.hpp>
+#include <huggle_core/collectable_smartptr.hpp>
+#include <huggle_core/localization.hpp>
 #include <QMessageBox>
 #include <QUrl>
-#include <query.hpp>
-#include <querypool.hpp>
-#include <mainwindow.hpp>
-#include <generic.hpp>
-#include <ui_mainwindow.h>
-#include <wikiedit.hpp>
-#include <wikisite.hpp>
-#include <wikipage.hpp>
-#include <wikiuser.hpp>
-#include <syslog.hpp>
-#include <configuration.hpp>
+#include <QMenu>
+#include <huggle_core/query.hpp>
+#include <huggle_core/querypool.hpp>
+#include <huggle_core/mainwindow.hpp>
+#include <huggle_core/generic.hpp>
+#include <huggle_core/wikiedit.hpp>
+#include <huggle_core/wikisite.hpp>
+#include <huggle_core/wikipage.hpp>
+#include <huggle_core/wikiuser.hpp>
+#include <huggle_core/syslog.hpp>
+#include <huggle_core/configuration.hpp>
 
 using namespace Huggle;
 
@@ -73,12 +73,12 @@ void huggle_thanks::Send(WikiEdit *edit)
 void huggle_thanks::Hook_MainWindowOnLoad(void *window)
 {
     this->Window = (Huggle::MainWindow*)window;
-    this->menuThanks = new QAction("Thank user for this edit", this->Window->ui->menuUser);
-    this->toggle = new QAction("Automatically thank users for every good edit", this->Window->ui->menuUser);
+    this->menuThanks = new QAction("Thank user for this edit", (QObject*)this->Window->GetMenu(HUGGLE_MW_MENU_USER));
+    this->toggle = new QAction("Automatically thank users for every good edit", (QObject*)this->Window->GetMenu(HUGGLE_MW_MENU_USER));
     this->toggle->setCheckable(true);
     this->toggle->setChecked(Generic::SafeBool(hcfg->GetExtensionConfig(this->GetExtensionName(), "toggle", "true")));
-    this->Window->ui->menuPage->addAction(this->toggle);
-    this->Window->ui->menuPage->addAction(this->menuThanks);
+    this->Window->GetMenu(HUGGLE_MW_MENU_PAGE)->addAction(this->toggle);
+    this->Window->GetMenu(HUGGLE_MW_MENU_PAGE)->addAction(this->menuThanks);
     connect(this->toggle, SIGNAL(triggered()), this, SLOT(Click0()));
     connect(this->menuThanks, SIGNAL(triggered()), this, SLOT(Click1()));
 }
