@@ -17,7 +17,7 @@
 #include <QMenu>
 #include <huggle_core/query.hpp>
 #include <huggle_core/querypool.hpp>
-#include <huggle_core/mainwindow.hpp>
+#include <huggle_ui/mainwindow.hpp>
 #include <huggle_core/generic.hpp>
 #include <huggle_core/wikiedit.hpp>
 #include <huggle_core/wikisite.hpp>
