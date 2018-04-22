@@ -25,6 +25,7 @@
 #include <huggle_core/wikiuser.hpp>
 #include <huggle_core/syslog.hpp>
 #include <huggle_core/configuration.hpp>
+#include <huggle_ui/uigeneric.hpp>
 
 using namespace Huggle;
 
@@ -32,7 +33,7 @@ bool huggle_thanks::WikiCk(WikiSite *site)
 {
     if (hcfg->GlobalConfigurationWikiAddress == "meta.wikimedia.org/w/")
         return true;
-    Generic::MessageBox("Error", "You can use this feature only on WMF wikis");
+    UiGeneric::MessageBox("Error", "You can use this feature only on WMF wikis");
     return false;
 }
 
