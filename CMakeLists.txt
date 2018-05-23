@@ -61,7 +61,7 @@ ADD_LIBRARY(huggle_thanks SHARED ${thanks_SOURCES} ${thanks_HEADERS_MOC} ${thank
 TARGET_LINK_LIBRARIES(huggle_thanks ${QT_LIBRARIES})
 TARGET_LINK_LIBRARIES(huggle_thanks huggle_core huggle_ui)
 if (QT5_BUILD)
-    qt5_use_modules(huggle_thanks Core Gui Widgets Xml)
+    target_link_libraries(huggle_thanks Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml)
 endif()
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 if (LINUX_SNAP)
