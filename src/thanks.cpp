@@ -31,7 +31,7 @@ using namespace Huggle;
 
 bool huggle_thanks::WikiCk(WikiSite *site)
 {
-    if (hcfg->GlobalConfigurationWikiAddress == "meta.wikimedia.org/w/")
+    if (hcfg->SystemConfig_GlobalConfigurationWikiAddress == "meta.wikimedia.org/w/")
         return true;
     UiGeneric::MessageBox("Error", "You can use this feature only on WMF wikis");
     return false;
